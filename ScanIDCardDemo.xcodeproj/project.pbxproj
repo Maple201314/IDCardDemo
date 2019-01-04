@@ -14,6 +14,9 @@
 		3D0EE71921DC65A30048873A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D0EE71721DC65A30048873A /* LaunchScreen.storyboard */; };
 		3D0EE71C21DC65A30048873A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0EE71B21DC65A30048873A /* main.m */; };
 		3D0EE72621DC65A30048873A /* ScanIDCardDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0EE72521DC65A30048873A /* ScanIDCardDemoTests.m */; };
+		3D0EE73121DC95830048873A /* DXIDCardCamera.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3D0EE73021DC95830048873A /* DXIDCardCamera.bundle */; };
+		3D9555A821DEEF2A000B23C7 /* DXIDCardFloatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9555A721DEEF2A000B23C7 /* DXIDCardFloatingView.m */; };
+		3D9555AB21DF37B5000B23C7 /* DXIDCardCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9555AA21DF37B5000B23C7 /* DXIDCardCameraController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,11 @@
 		3D0EE72121DC65A30048873A /* ScanIDCardDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScanIDCardDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D0EE72521DC65A30048873A /* ScanIDCardDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanIDCardDemoTests.m; sourceTree = "<group>"; };
 		3D0EE72721DC65A30048873A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D0EE73021DC95830048873A /* DXIDCardCamera.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DXIDCardCamera.bundle; sourceTree = "<group>"; };
+		3D9555A621DEEF2A000B23C7 /* DXIDCardFloatingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DXIDCardFloatingView.h; sourceTree = "<group>"; };
+		3D9555A721DEEF2A000B23C7 /* DXIDCardFloatingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DXIDCardFloatingView.m; sourceTree = "<group>"; };
+		3D9555A921DF37B5000B23C7 /* DXIDCardCameraController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DXIDCardCameraController.h; sourceTree = "<group>"; };
+		3D9555AA21DF37B5000B23C7 /* DXIDCardCameraController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DXIDCardCameraController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +89,8 @@
 		3D0EE70B21DC65A10048873A /* ScanIDCardDemo */ = {
 			isa = PBXGroup;
 			children = (
+				3D9555A421DEEEEA000B23C7 /* IDCard */,
+				3D0EE73021DC95830048873A /* DXIDCardCamera.bundle */,
 				3D0EE70C21DC65A10048873A /* AppDelegate.h */,
 				3D0EE70D21DC65A10048873A /* AppDelegate.m */,
 				3D0EE70F21DC65A10048873A /* ViewController.h */,
@@ -101,6 +111,18 @@
 				3D0EE72721DC65A30048873A /* Info.plist */,
 			);
 			path = ScanIDCardDemoTests;
+			sourceTree = "<group>";
+		};
+		3D9555A421DEEEEA000B23C7 /* IDCard */ = {
+			isa = PBXGroup;
+			children = (
+				3D9555A621DEEF2A000B23C7 /* DXIDCardFloatingView.h */,
+				3D9555A721DEEF2A000B23C7 /* DXIDCardFloatingView.m */,
+				3D9555A921DF37B5000B23C7 /* DXIDCardCameraController.h */,
+				3D9555AA21DF37B5000B23C7 /* DXIDCardCameraController.m */,
+			);
+			name = IDCard;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,6 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D0EE71921DC65A30048873A /* LaunchScreen.storyboard in Resources */,
+				3D0EE73121DC95830048873A /* DXIDCardCamera.bundle in Resources */,
 				3D0EE71621DC65A30048873A /* Assets.xcassets in Resources */,
 				3D0EE71421DC65A10048873A /* Main.storyboard in Resources */,
 			);
@@ -206,6 +229,8 @@
 				3D0EE71121DC65A10048873A /* ViewController.m in Sources */,
 				3D0EE71C21DC65A30048873A /* main.m in Sources */,
 				3D0EE70E21DC65A10048873A /* AppDelegate.m in Sources */,
+				3D9555A821DEEF2A000B23C7 /* DXIDCardFloatingView.m in Sources */,
+				3D9555AB21DF37B5000B23C7 /* DXIDCardCameraController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +389,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HR2CE37RCZ;
 				INFOPLIST_FILE = ScanIDCardDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -381,6 +407,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HR2CE37RCZ;
 				INFOPLIST_FILE = ScanIDCardDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
