@@ -43,19 +43,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
-    
-    ///
     _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     _imageOutput = [[AVCaptureStillImageOutput alloc] init];
     _session = [[AVCaptureSession alloc] init];
     _previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_session];
     _previewLayer.frame = UIScreen.mainScreen.bounds;
     _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-
     _floatingView = [[DXIDCardFloatingView alloc] init];
     [_floatingView initWithType:self.type];
     
-    _resouceBundle = [NSBundle bundleWithPath:[[NSBundle alloc] pathForResource:@"DXIDCardCamera" ofType:@"bundle"]];
+    _resouceBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"DXIDCardCamera" ofType:@"bundle"]];
 
     CGFloat kScreenH = UIScreen.mainScreen.bounds.size.height;
     CGFloat kScreenW = UIScreen.mainScreen.bounds.size.width;
@@ -80,6 +77,7 @@
     _bottomView.backgroundColor = UIColor.blackColor;
     _bottomView.hidden = true;
     _bottomView.frame = CGRectMake(0, kScreenH-64, kScreenW, 64);
+   
     /**重拍**/
     UIButton* againBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [againBtn setTitle:@"重拍" forState:UIControlStateNormal];
@@ -88,15 +86,17 @@
     againBtn.titleLabel.font = [UIFont systemFontOfSize:18];
     againBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
     againBtn.frame = CGRectMake(12, 0, 64, 64);
+    againBtn.transform = CGAffineTransformMakeRotation(M_PI_2);;
     [_bottomView addSubview:againBtn];
     /**使用照片**/
     UIButton* useBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [useBtn setTitle:@"使用照片" forState:UIControlStateNormal];
+    [useBtn setTitle:@"使用" forState:UIControlStateNormal];
     [useBtn setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [useBtn addTarget:self action:@selector(usePhoto:) forControlEvents:UIControlEventTouchUpInside];
     useBtn.titleLabel.font = [UIFont systemFontOfSize:18];
     useBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
     useBtn.frame = CGRectMake(kScreenW-100, 0, 100, 64);
+    useBtn.transform = CGAffineTransformMakeRotation(M_PI_2);;
     [_bottomView addSubview:useBtn];
     
     
@@ -174,23 +174,89 @@
     [kCenter addObserver:self selector:@selector(subjectAreaDidChange:) name: AVCaptureDeviceSubjectAreaDidChangeNotification object:nil];
 }
 - (void)focusAtPoint:(CGPoint)point{
+    //CGSize size = self.view.bounds.size;
+    //CGPoint focusPoint = CGPointMake(point.y/size.height, 1-point.x/size.width);
+    //focusPoint should in the center of the screen
+    if(_device != nil){
+        //对cameraDevice进行操作前，需要先锁定，防止其他线程访问，
+        [_device lockForConfiguration:nil];
+        if ([_device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+            _device.focusPointOfInterest = CGPointMake(0.5, 0.5);
+            _device.focusMode = AVCaptureFocusModeAutoFocus;
+        }
+        if ([_device isExposureModeSupported:AVCaptureExposureModeAutoExpose]) {
+            _device.exposurePointOfInterest = CGPointMake(0.5, 0.5);
+            _device.exposureMode = AVCaptureExposureModeAutoExpose;
+        }
+        [_device unlockForConfiguration];
+    }
     
 }
 - (void)shutterCamera:(UIButton*)button {
-    
+    __weak typeof(self) weakSelf = self;
+    AVCaptureConnection* videoConnection = [self.imageOutput connectionWithMediaType:AVMediaTypeVideo];
+    [self.imageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:^(CMSampleBufferRef  _Nullable imageDataSampleBuffer,NSError * _Nullable error) {
+        if(imageDataSampleBuffer != nil) {
+            NSData* imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer  ];
+            UIImage* img = [[UIImage alloc] initWithData:imageData];
+            UIImage* newImg = [weakSelf cropImageToCGRect:weakSelf.floatingView.IDCardWindowLayer.bounds from:img];
+            //roate the image
+            weakSelf.image = [UIImage imageWithCGImage:newImg.CGImage scale:1.0 orientation:UIImageOrientationUp];
+            [weakSelf.session stopRunning];
+            weakSelf.imageView = [[UIImageView alloc] initWithFrame:weakSelf.floatingView.IDCardWindowLayer.frame];
+            [weakSelf.view insertSubview:weakSelf.imageView belowSubview:button];
+            weakSelf.imageView.layer.masksToBounds = true;
+            weakSelf.imageView.layer.cornerRadius = 15;
+            weakSelf.imageView.image = [UIImage imageWithCGImage:newImg.CGImage scale:1.0 orientation:UIImageOrientationRight];
+            //weakSelf.imageView.contentMode = UIViewContentModeTopLeft;
+            weakSelf.imageView.layer.borderColor = UIColor.whiteColor.CGColor;
+            weakSelf.imageView.layer.borderWidth = 2;
+            weakSelf.cancleButton.hidden = true;
+            weakSelf.flashButton.hidden = true;
+            weakSelf.photoButton.hidden = true;
+            weakSelf.bottomView.hidden = false;
+            weakSelf.floatingView.textLabel.hidden = true;
+        }
+    }];
 }
 
 - (void)cancleButtonAction:(UIButton*)button {
-    
+    [self.imageView removeFromSuperview];
+    self.imageView = nil;
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 - (void)flashOn:(UIButton*)button {
-    
+    if (nil == _device) {
+        return;
+    }
+    if ([_device hasTorch]) {
+        [_device lockForConfiguration:nil];
+        if(self.isFlashOn == false){
+            _device.torchMode = AVCaptureTorchModeOn;
+            _isFlashOn = true;
+        }else{
+            _device.torchMode = AVCaptureTorchModeOff;
+            _isFlashOn = false;
+        }
+        [_device unlockForConfiguration];
+    }
 }
 - (void)takePhotoAgain:(UIButton*)button {
-    
+    [self.session startRunning];
+    [self.imageView removeFromSuperview];
+    self.imageView = nil;
+    self.cancleButton.hidden = false;
+    self.flashButton.hidden = false;
+    self.photoButton.hidden = false;
+    self.bottomView.hidden = true;
+    self.floatingView.textLabel.hidden = false;
+
 }
 - (void)usePhoto:(UIButton*)button {
-    
+    if(nil != self.delegate){
+        [self.delegate cameraShootWithImage:self.image type:_type];
+    }
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 // 点击聚焦
 
@@ -203,8 +269,7 @@
     //先进行判断是否支持控制对焦
     if(_device != nil && _device.isFocusPointOfInterestSupported && [_device isFocusModeSupported:AVCaptureFocusModeAutoFocus]){
         //对cameraDevice进行操作前，需要先锁定，防止其他线程访问，
-        NSError *error = [[NSError alloc] init];
-        [_device lockForConfiguration:&error];
+        [_device lockForConfiguration:nil];
         _device.focusMode = AVCaptureFocusModeAutoFocus;
         CGRect bounds = UIScreen.mainScreen.bounds;
         CGPoint point = CGPointMake(bounds.size.width/2, bounds.size.height/2);
@@ -213,6 +278,39 @@
     }
 }
 
+-(UIImage*) cropImageToCGRect:(CGRect)rect from:(UIImage*)oriImage {
+    CGFloat screenWidth = UIScreen.mainScreen.bounds.size.width;
+    CGFloat screenHeight = UIScreen.mainScreen.bounds.size.height;
+    
+    CGFloat imageWidth  = CGImageGetWidth(oriImage.CGImage);
+    CGFloat imageHeight = CGImageGetHeight(oriImage.CGImage);
+    
+    CGFloat widthScale  = imageWidth / screenHeight;
+    CGFloat heightScale = imageHeight / screenWidth;
+    
+    //其实是横屏的
+    CGFloat originWidth   = rect.size.width;
+    CGFloat originHeight  = rect.size.height;
+    NSLog(@"屏幕大小:%@",NSStringFromCGRect(UIScreen.mainScreen.bounds));
+    NSLog(@"相框大小:%@",NSStringFromCGRect(rect));
+
+    CGFloat x = (screenHeight - originHeight) * 0.5 * widthScale;
+    CGFloat y = (screenWidth - originWidth) * 0.5 * heightScale;
+    CGFloat height = originHeight * heightScale;
+    CGFloat width  = height * originWidth / originHeight;
+    CGRect current = CGRectMake(x, y, height, width);
+
+    NSLog(@"裁剪大小:%@",NSStringFromCGRect(current));
+
+    CGImageRef subImageRef = CGImageCreateWithImageInRect(oriImage.CGImage, current);
+    CGRect smallBounds = CGRectMake(0, 0, CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
+    UIGraphicsBeginImageContext(smallBounds.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextDrawImage(context, smallBounds, subImageRef);
+    UIImage* smallImage = [UIImage imageWithCGImage:subImageRef];
+    UIGraphicsEndImageContext();
+    return smallImage;
+}
 - (void)dealloc{
     [NSNotificationCenter.defaultCenter removeObserver:self];
 }
@@ -234,14 +332,5 @@
 }
 
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

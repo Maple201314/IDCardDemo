@@ -8,18 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "DXIDCardFloatingView.h"
-NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^cameraDidFinishShootWithCameraImage)(UIImage*);
-typedef void(^cameraDidFinishCancel)(void);
+@protocol DXIDCardDelegate<NSObject>
+- (void) cameraShootWithImage:(UIImage*)image type:(DXIDCardType) type;
+@end
 
 @interface DXIDCardCameraController : UIViewController
 
-@property(nonatomic,assign) cameraDidFinishShootWithCameraImage finishImage;
-@property(nonatomic,assign) cameraDidFinishCancel finishCancel;
+
+@property(nonatomic,weak) id<DXIDCardDelegate> delegate;
 
 - (instancetype)initWithType: (DXIDCardType)type;
 
 @end
-
-NS_ASSUME_NONNULL_END

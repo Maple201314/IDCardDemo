@@ -18,6 +18,8 @@ typedef enum : NSUInteger {
 @interface DXIDCardFloatingView : UIView
 
 @property(nonatomic,assign) DXIDCardType type;
+@property(nonatomic,strong) CAShapeLayer *IDCardWindowLayer;
+@property(nonatomic,strong)  UILabel *textLabel;
 
 - (void)initWithType:(DXIDCardType)type;
 @end

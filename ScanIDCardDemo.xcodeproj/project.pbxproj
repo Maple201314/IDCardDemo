@@ -17,6 +17,7 @@
 		3D0EE73121DC95830048873A /* DXIDCardCamera.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3D0EE73021DC95830048873A /* DXIDCardCamera.bundle */; };
 		3D9555A821DEEF2A000B23C7 /* DXIDCardFloatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9555A721DEEF2A000B23C7 /* DXIDCardFloatingView.m */; };
 		3D9555AB21DF37B5000B23C7 /* DXIDCardCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9555AA21DF37B5000B23C7 /* DXIDCardCameraController.m */; };
+		3DB55FD721E334DF0083916D /* test_face.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3DB55FD621E334DF0083916D /* test_face.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		3D9555A721DEEF2A000B23C7 /* DXIDCardFloatingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DXIDCardFloatingView.m; sourceTree = "<group>"; };
 		3D9555A921DF37B5000B23C7 /* DXIDCardCameraController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DXIDCardCameraController.h; sourceTree = "<group>"; };
 		3D9555AA21DF37B5000B23C7 /* DXIDCardCameraController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DXIDCardCameraController.m; sourceTree = "<group>"; };
+		3DB55FD621E334DF0083916D /* test_face.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_face.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		3D0EE70B21DC65A10048873A /* ScanIDCardDemo */ = {
 			isa = PBXGroup;
 			children = (
+				3DB55FD621E334DF0083916D /* test_face.jpg */,
 				3D9555A421DEEEEA000B23C7 /* IDCard */,
 				3D0EE73021DC95830048873A /* DXIDCardCamera.bundle */,
 				3D0EE70C21DC65A10048873A /* AppDelegate.h */,
@@ -208,6 +211,7 @@
 				3D0EE71921DC65A30048873A /* LaunchScreen.storyboard in Resources */,
 				3D0EE73121DC95830048873A /* DXIDCardCamera.bundle in Resources */,
 				3D0EE71621DC65A30048873A /* Assets.xcassets in Resources */,
+				3DB55FD721E334DF0083916D /* test_face.jpg in Resources */,
 				3D0EE71421DC65A10048873A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

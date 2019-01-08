@@ -9,9 +9,7 @@
 #import "DXIDCardFloatingView.h"
 @interface DXIDCardFloatingView()
 
-@property(nonatomic,strong) CAShapeLayer *IDCardWindowLayer;
-@property(nonatomic,strong) NSBundle *resouceBundle;
-
+@property(nonatomic,strong)  NSBundle *resouceBundle;
 @end
 @implementation DXIDCardFloatingView
 
@@ -30,7 +28,7 @@ BOOL isIPhone6or6sor7;//  = kScreenH == 667.0;
     _IDCardWindowLayer.borderColor = UIColor.whiteColor.CGColor;
     _IDCardWindowLayer.borderWidth = 2;
     
-    _resouceBundle = [NSBundle bundleWithPath:[[NSBundle alloc] pathForResource:@"DXIDCardCamera" ofType:@"bundle"]];
+    _resouceBundle = [NSBundle bundleWithPath:[NSBundle.mainBundle pathForResource:@"DXIDCardCamera" ofType:@"bundle"]];
     
     self.backgroundColor = UIColor.clearColor;
     CGFloat width = isIPhone5or5cor5sorSE ? 240 : (isIPhone6or6sor7 ? 240 : 270);
@@ -38,7 +36,8 @@ BOOL isIPhone6or6sor7;//  = kScreenH == 667.0;
     [self.layer addSublayer:_IDCardWindowLayer];
     // 最里层镂空
     UIBezierPath *transparentRoundedRectPath = [UIBezierPath
-                bezierPathWithRoundedRect:_IDCardWindowLayer.frame cornerRadius:_IDCardWindowLayer.cornerRadius];
+                                                bezierPathWithRoundedRect:_IDCardWindowLayer.frame
+                                                cornerRadius:_IDCardWindowLayer.cornerRadius];
     
     // 最外层背景
     UIBezierPath *path = [UIBezierPath bezierPathWithRect:UIScreen.mainScreen.bounds];
@@ -53,13 +52,13 @@ BOOL isIPhone6or6sor7;//  = kScreenH == 667.0;
     [self.layer addSublayer:fillLayer];
     
     // 提示标签
-    UILabel *textLabel = [UILabel new];
+    self.textLabel = [UILabel new];
     NSString* text = type == front ? @"对齐身份证正面并点击拍照" : @"对齐身份证背面并点击拍照";
-    textLabel.text = text;
-    textLabel.textAlignment = NSTextAlignmentCenter;
-    textLabel.font = [UIFont systemFontOfSize:14];
-    textLabel.textColor = UIColor.whiteColor;
-    [self addSubview:textLabel];
+     self.textLabel.text = text;
+     self.textLabel.textAlignment = NSTextAlignmentCenter;
+     self.textLabel.font = [UIFont systemFontOfSize:14];
+     self.textLabel.textColor = UIColor.whiteColor;
+    [self addSubview: self.textLabel];
     
     CGFloat kScreenH = UIScreen.mainScreen.bounds.size.height;
     CGFloat kScreenW = UIScreen.mainScreen.bounds.size.width;
@@ -68,8 +67,8 @@ BOOL isIPhone6or6sor7;//  = kScreenH == 667.0;
     CGFloat x  = (kScreenW - w)/2 -_IDCardWindowLayer.frame.size.width/2-20;
     CGFloat y  = (kScreenH - h)/2;
     
-    textLabel.frame = CGRectMake(x, y, w, h);
-    textLabel.transform = CGAffineTransformMakeRotation(M_PI_2);
+    self.textLabel.frame = CGRectMake(x, y, w, h);
+    self.textLabel.transform = CGAffineTransformMakeRotation(M_PI_2);
     
     CGFloat facePathWidth   = 0;
     CGFloat facePathHeight  = 0;
